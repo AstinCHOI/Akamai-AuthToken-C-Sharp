@@ -7,7 +7,7 @@ namespace Akamai.Auth.Token
     public class AuthToken
     {
         /** Current time when using startTime */
-        public static readonly long? NOW = 0;
+        public static readonly long NOW = 0;
 
         /** ! delimiter when using ACL */
         public static String ACL_DELIMITER = "!";
@@ -110,217 +110,98 @@ namespace Akamai.Auth.Token
             get { return key; }
             set
             {
-				if (string.IsNullOrEmpty(value))
-				{
-					throw new AuthTokenException("You must provide a secret in order to generate a new token.");
-				}
-				key = value;
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new AuthTokenException("You must provide a secret in order to generate a new token.");
+                }
+                key = value;
             }
         }
 
-
-        /**
-         * @param algorithm algorithm
-         */
-        public void SetAlgorithm(String algorithm)
+        public String Algorithm
         {
-            if (!algorithm.equalsIgnoreCase("md5") &&
-            !algorithm.equalsIgnoreCase("sha1") &&
-            !algorithm.equalsIgnoreCase("sha256"))
+            get { return algorithm; }
+            set
             {
-                throw new AuthTokenException("Unknown Algorithm");
+                if (value.ToLower().Equals("md5"))
+                {
+                    algorithm = "HMACMD5";
+                }
+                else if (value.ToLower().Equals("sha1"))
+                {
+                    algorithm = "HMACSHA1";
+                }
+                else if (value.ToLower().Equals("sha256"))
+                {
+                    algorithm = "HMACSHA256";
+                }
+                else
+                {
+                    throw new AuthTokenException("Unknown Algorithm");
+                }
             }
-            if (algorithm.equalsIgnoreCase("sha256"))
-                this.algorithm = "HmacSHA256";
-            else if (algorithm.equalsIgnoreCase("sha1"))
-                this.algorithm = "HmacSHA1";
-            else if (algorithm.equalsIgnoreCase("md5"))
-                this.algorithm = "HmacMD5";
         }
 
-        /**
-         * @param salt salt
-         */
-        public void SetSalt(String salt)
+        public String Salt
         {
-            this.salt = salt;
+
+            get { return salt; }
+            set { salt = value; }
         }
 
-        /**
-         * @param ip ip
-         */
-        public void SetIp(String ip)
+        public String Ip
         {
-            this.ip = ip;
+            get { return ip; }
+            set { ip = value; }
         }
 
-        /**
-         * @param payload payload
-         */
-        public void SetPayload(String payload)
+        public String PayLoad
         {
-            this.payload = payload;
+            get { return payload; }
+            set { payload = value; }
         }
 
-        /**
-         * @param sessionId sessionId
-         */
-        public void SetSessionId(String sessionId)
+		public String SessionId
+		{
+			get { return sessionId; }
+			set { sessionId = value; }
+		}
+
+        public long? StartTime
         {
-            this.sessionId = sessionId;
+            get { return startTime; }
+            set { startTime = value; }
         }
 
-        /**
-         * @param startTime startTime
-         */
-        public void SetStartTime(Long startTime)
-        {
-            this.startTime = startTime;
-        }
+		public long? EndTime
+		{
+			get { return endTime; }
+			set { endTime = value; }
+		}
 
-        /**
-         * @param endTime endTime
-         */
-        public void SetEndTime(Long endTime)
-        {
-            this.endTime = endTime;
-        }
+		public long? WindowSeconds
+		{
+			get { return windowSeconds; }
+			set { windowSeconds = value; }
+		}
 
-        /**
-         * @param windowSeconds windowSeconds
-         */
-        public void SetWindowSeconds(Long windowSeconds)
-        {
-            this.windowSeconds = windowSeconds;
-        }
+		public char FieldDelimiter
+		{
+			get { return fieldDelimiter; }
+			set { fieldDelimiter = value; }
+		}
 
-        /**
-         * @param fieldDelimiter fieldDelimiter
-         */
-        public void SetFieldDelimiter(char fieldDelimiter)
-        {
-            this.fieldDelimiter = fieldDelimiter;
-        }
+		public bool EscapeEarly
+		{
+			get { return escapeEarly; }
+			set { escapeEarly = value; }
+		}
 
-        /**
-         * @param escapeEarly escapeEarly
-         */
-        public void SetEscapeEarly(bool escapeEarly)
-        {
-            this.escapeEarly = escapeEarly;
-        }
-        /**
-         * @param verbose verbose
-         */
-        public void SetVerbose(bool verbose)
-        {
-            this.verbose = verbose;
-        }
-
-
-        /**
-         * @return tokenName
-         */
-        public String getTokenName()
-        {
-            return this.tokenName;
-        }
-
-        /**
-         * @return key
-         */
-        public String getKey()
-        {
-            return this.key;
-        }
-
-        /**
-         * @return algorithm
-         */
-        public String getAlgorithm()
-        {
-            return this.algorithm;
-        }
-
-        /**
-         * @return salt
-         */
-        public String getSalt()
-        {
-            return this.salt;
-        }
-
-        /**
-         * @return ip
-         */
-        public String getIp()
-        {
-            return this.ip;
-        }
-
-        /**
-         * @return payload
-         */
-        public String getPayload()
-        {
-            return this.payload;
-        }
-
-        /**
-         * @return sessionId
-         */
-        public String getSessionId()
-        {
-            return this.sessionId;
-        }
-
-        /**
-         * @return startTime
-         */
-        public long getStartTime()
-        {
-            return this.startTime;
-        }
-
-        /**
-         * @return endTime
-         */
-        public long getEndTime()
-        {
-            return this.endTime;
-        }
-
-        /**
-         * @return windowSeconds
-         */
-        public long getwindowSeconds()
-        {
-            return this.windowSeconds;
-        }
-
-        /**
-         * @return fieldDelimiter
-         */
-        public char getFieldDelimiter()
-        {
-            return this.fieldDelimiter;
-        }
-
-        /**
-         * @return escapeEarly
-         */
-        public bool isEscapeEarly()
-        {
-            return this.escapeEarly;
-        }
-
-        /**
-         * @return verbose
-         */
-        public bool isVerbose()
-        {
-            return this.verbose;
-        }
+		public bool Verbose
+		{
+			get { return verbose; }
+			set { verbose = value; }
+		}
     }
 
     public class AuthTokenBuilder
@@ -366,6 +247,44 @@ namespace Akamai.Auth.Token
 
         /** print all parameters. */
         private bool verbose = false;
+
+
+        private String EscapeEarly(String text) 
+        {
+            if (escapeEarly) 
+            {
+                return Uri.EscapeDataString(text);
+            }
+            else 
+            {
+                return text;
+            }
+        }
+
+        private String GenerateToken(String path, bool isUrl)
+        {
+            return "";
+        }
+
+        public String GenerateURLToken(String url)
+        {
+            if (string.IsNullOrEmpty(url)) 
+            {
+                throw new AuthTokenException("You must provide a URL.");
+            }
+
+            return GenerateToken(url, true);
+        }
+
+        public String GenerateACLToken(String acl)
+        {
+			if (string.IsNullOrEmpty(acl))
+			{
+				throw new AuthTokenException("You must provide an ACL.");
+			}
+
+            return GenerateToken(acl, false);
+        }
 
         /**
 	     * @param tokenType tokenType
@@ -532,7 +451,7 @@ namespace Akamai.Auth.Token
 	     */
         public AuthTokenException(String msg)
         {
-
+            
         }
     }
 }
