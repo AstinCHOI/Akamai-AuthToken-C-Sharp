@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 
 namespace Akamai.Auth.Token
@@ -85,6 +86,45 @@ namespace Akamai.Auth.Token
             this.escapeEarly = escapeEarly;
             this.verbose = verbose;
         }
+
+		private String EscapeEarly(String text)
+		{
+			if (escapeEarly)
+			{
+                return Regex.Replace(Uri.EscapeDataString(text), 
+                                     "(%..)", 
+                                     m => m.Groups[1].Value.ToLower());
+			}
+			else
+			{
+				return text;
+			}
+		}
+
+		private String GenerateToken(String path, bool isUrl)
+		{
+			return "";
+		}
+
+		public String GenerateURLToken(String url)
+		{
+			if (string.IsNullOrEmpty(url))
+			{
+				throw new AuthTokenException("You must provide a URL.");
+			}
+
+			return GenerateToken(url, true);
+		}
+
+		public String GenerateACLToken(String acl)
+		{
+			if (string.IsNullOrEmpty(acl))
+			{
+				throw new AuthTokenException("You must provide an ACL.");
+			}
+
+			return GenerateToken(acl, false);
+		}
 
         public String TokenType
         {
@@ -247,44 +287,6 @@ namespace Akamai.Auth.Token
 
         /** print all parameters. */
         private bool verbose = false;
-
-
-        private String EscapeEarly(String text) 
-        {
-            if (escapeEarly) 
-            {
-                return Uri.EscapeDataString(text);
-            }
-            else 
-            {
-                return text;
-            }
-        }
-
-        private String GenerateToken(String path, bool isUrl)
-        {
-            return "";
-        }
-
-        public String GenerateURLToken(String url)
-        {
-            if (string.IsNullOrEmpty(url)) 
-            {
-                throw new AuthTokenException("You must provide a URL.");
-            }
-
-            return GenerateToken(url, true);
-        }
-
-        public String GenerateACLToken(String acl)
-        {
-			if (string.IsNullOrEmpty(acl))
-			{
-				throw new AuthTokenException("You must provide an ACL.");
-			}
-
-            return GenerateToken(acl, false);
-        }
 
         /**
 	     * @param tokenType tokenType
@@ -449,9 +451,6 @@ namespace Akamai.Auth.Token
         /**
 	     * @param msg exception message
 	     */
-        public AuthTokenException(String msg)
-        {
-            
-        }
+        public AuthTokenException(String msg) : base(msg) {}
     }
 }
