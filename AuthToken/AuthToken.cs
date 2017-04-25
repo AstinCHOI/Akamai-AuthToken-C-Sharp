@@ -103,7 +103,74 @@ namespace Akamai.Auth.Token
 
 		private String GenerateToken(String path, bool isUrl)
 		{
-			return "";
+            if (this.startTime == AuthToken.NOW)
+            {
+                this.startTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            }
+            else if (this.startTime != null && this.windowSeconds < 0)
+            {
+                throw new AuthTokenException("startTime must be ( > 0 )");
+            }
+
+			if (this.endTime == null)
+			{
+				if (this.windowSeconds != null && this.windowSeconds > 0)
+				{
+					if (this.startTime == null)
+					{
+						this.endTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds +
+							this.windowSeconds;
+					}
+					else
+					{
+						this.endTime = this.startTime + this.windowSeconds;
+					}
+				}
+				else
+				{
+					throw new AuthTokenException("You must provide an expiration time or a duration window ( > 0 )");
+				}
+			}
+			else if (this.endTime <= 0)
+			{
+				throw new AuthTokenException("endTime must be ( > 0 )");
+			}
+
+			if (this.startTime != null && (this.endTime <= this.startTime))
+			{
+				throw new AuthTokenException("Token will have already expired.");
+			}
+
+			if (this.verbose)
+			{
+				Console.WriteLine("Akamai Token Generation Parameters");
+				if (isUrl)
+				{
+					Console.WriteLine("    URL             : " + path);
+				}
+				else
+				{
+					Console.WriteLine("    ACL             : " + path);
+				}
+				Console.WriteLine("    Token Type      : " + this.tokenType);
+				Console.WriteLine("    Token Name      : " + this.tokenName);
+				Console.WriteLine("    Key/Secret      : " + this.key);
+				Console.WriteLine("    Algo            : " + this.algorithm);
+				Console.WriteLine("    Salt            : " + this.salt);
+				Console.WriteLine("    IP              : " + this.ip);
+				Console.WriteLine("    Payload         : " + this.payload);
+				Console.WriteLine("    Session ID      : " + this.sessionId);
+				Console.WriteLine("    Start Time      : " + this.startTime);
+				Console.WriteLine("    Window(seconds) : " + this.windowSeconds);
+				Console.WriteLine("    End Time        : " + this.endTime);
+				Console.WriteLine("    Field Delimiter : " + this.fieldDelimiter);
+				Console.WriteLine("    ACL Delimiter   : " + AuthToken.ACL_DELIMITER);
+				Console.WriteLine("    Escape Early    : " + this.escapeEarly);
+			}
+
+
+
+            return "";
 		}
 
 		public String GenerateURLToken(String url)
