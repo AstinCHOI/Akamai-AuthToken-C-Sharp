@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -167,6 +168,49 @@ namespace Akamai.Auth.Token
 				Console.WriteLine("    ACL Delimiter   : " + AuthToken.ACL_DELIMITER);
 				Console.WriteLine("    Escape Early    : " + this.escapeEarly);
 			}
+
+
+            StringBuilder newToken = new StringBuilder();
+            if (string.IsNullOrEmpty(this.ip))
+            {
+                newToken.Append(string.Format("ip={0}{1}", this.ip, this.fieldDelimiter));
+            }
+
+            if (this.startTime != null)
+            {
+                newToken.Append(string.Format("st={0}{1}", this.startTime, this.fieldDelimiter));
+            }
+
+            newToken.Append(string.Format("exp={0}{1}", this.endTime, this.fieldDelimiter));
+
+            if (!isUrl) 
+            {
+                newToken.Append(string.Format("acl={0}{1}", path, this.fieldDelimiter));
+            }
+
+            if (string.IsNullOrEmpty(this.sessionId))
+			{
+				newToken.Append(string.Format("id={0}{1}", this.sessionId, this.fieldDelimiter));
+			}
+
+			if (string.IsNullOrEmpty(this.payload))
+			{
+				newToken.Append(string.Format("data={0}{1}", this.payload, this.fieldDelimiter));
+			}
+
+            StringBuilder hashSource = new StringBuilder(newToken.ToString());
+            if (isUrl)
+            {
+                hashSource.Append(string.Format("url={0}{1}", path, this.fieldDelimiter));
+            }
+
+            if (string.IsNullOrEmpty(this.salt))
+			{
+				hashSource.Append(string.Format("salt={0}{1}", this.salt, this.fieldDelimiter));
+			}
+            // hashSource.Remove(hashSource.Length-1, 1);
+
+
 
 
 
