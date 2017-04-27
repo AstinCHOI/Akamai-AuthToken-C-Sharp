@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="Test.cs" />
     <Compile Include="AuthToken.cs" />
+    <Compile Include="Secret.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
